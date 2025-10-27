@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Agradecimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 20px;
+            animation: float-up 10s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .letter-container {
+            max-width: 800px;
+            width: 100%;
+            background: #fff9f0;
+            padding: 60px 50px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            animation: slideIn 1s ease;
+            background-image: 
+                linear-gradient(rgba(255, 240, 240, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 240, 240, 0.3) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px double #e74c3c;
+        }
+
+        .letter-header h1 {
+            color: #e74c3c;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: heartPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes heartPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .letter-date {
+            color: #666;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .letter-content {
+            color: #333;
+            font-size: 1.3em;
+            line-height: 2;
+            text-align: justify;
+            margin-bottom: 40px;
+        }
+
+        .letter-content p {
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .letter-content p:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .letter-content p:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .letter-content p:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .letter-content p:nth-child(4) {
+            animation-delay: 0.8s;
+        }
+
+        .letter-content p:nth-child(5) {
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .letter-signature {
+            text-align: right;
+            margin-top: 50px;
+            font-size: 1.4em;
+            color: #e74c3c;
+            font-style: italic;
+            animation: fadeIn 1.5s ease 1.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .signature-name {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 10px;
+            font-family: 'Brush Script MT', cursive;
+        }
+
+        .decorative-hearts {
+            text-align: center;
+            font-size: 2em;
+            margin: 30px 0;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .envelope-decoration {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .letter-container {
+                padding: 40px 30px;
+            }
+
+            .letter-header h1 {
+                font-size: 2.2em;
+            }
+
+            .letter-content {
+                font-size: 1.1em;
+                line-height: 1.8;
+            }
+
+            .back-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="hearts"></div>
+    
+    <div class="letter-container">
+        <div class="envelope-decoration">💌</div>
+        
+        <div class="letter-header">
+            <h1>💖 Gracias 💖</h1>
+            <p class="letter-date">Con todo mi corazón</p>
+        </div>
+
+        <div class="letter-content">
+            <p>
+                <span class="highlight">Gracias</span>, simplemente <span class="highlight">gracias</span> por todo lo que haces y has hecho por mí, por demostrar tu amor tan grande hacia a mí, a pesar de mis loqueras, inseguridades gracias por seguir amándome y eligiéndome todos los días.
+            </p>
+
+            <p>
+                Simplemente gracias por ser ese hombre que tanto le pedí a Dios, siendo un hombre amoroso, respetuoso, caballeroso, servicial, inteligente, esforzado, creativo, increíble, tan guapo tan tú y acá me queda muy corto para describir lo gran hombre que eres.
+            </p>
+
+            <div class="decorative-hearts">❤️ 💕 ❤️</div>
+
+            <p>
+                Aunque no te lo creas eres el mejor, y siempre te lo voy a repetir hasta que te lo creas, que eres el mejor novio, hombre, amigo, hijo, músico, estudiante, en <span class="highlight">TOODOO</span> ok? JAJJAJA
+            </p>
+
+            <p>
+                Solo quería decirte gracias...
+            </p>
+
+            <p>
+                Y que <span class="highlight">te amo</span> y <span class="highlight">te amaré siempre</span> mi futuro esposo y amor de mi vida 🥹❤️
+            </p>
+        </div>
+
+        <div class="letter-signature">
+            <p>Con todo mi amor,</p>
+            <p class="signature-name">Tu amor eterno 💕</p>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="goBack()">
+        <span>←</span>
+        <span>Volver</span>
+    </button>
+
+    <audio id="backgroundMusic" loop>
+        <source src="Lord Huron - The Night We Met (Sub. Español  Lyrics).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const music = document.getElementById('backgroundMusic');
+
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                    heart.style.animationDelay = Math.random() * 3 + 's';
+                    container.appendChild(heart);
+                }, i * 150);
+            }
+        }
+
+        function goBack() {
+            // Guardar el tiempo de la música antes de volver
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+                sessionStorage.setItem('musicPlaying', 'true');
+            }
+            window.location.href = 'BotonesCartas.html';
+        }
+
+        // Continuar reproduciendo la música desde donde se quedó
+        window.addEventListener('load', function() {
+            const musicTime = sessionStorage.getItem('musicTime');
+            const musicPlaying = sessionStorage.getItem('musicPlaying');
+            
+            if (musicPlaying === 'true') {
+                music.volume = 1.0;
+                
+                // Restaurar el tiempo de reproducción
+                if (musicTime) {
+                    music.currentTime = parseFloat(musicTime);
+                }
+                
+                // Intentar reproducir
+                music.play().then(() => {
+                    console.log('✅ Música continuando en carta1');
+                }).catch(error => {
+                    console.log('⚠️ Error al reproducir música:', error);
+                    // Si hay error, reproducir con primera interacción
+                    document.body.addEventListener('click', function playOnce() {
+                        music.play();
+                        document.body.removeEventListener('click', playOnce);
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Guardar tiempo periódicamente mientras se reproduce
+        setInterval(() => {
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+            }
+        }, 1000);
+
+        // Inicializar
+        createHearts();
+    </script>
+</body>
+</html>

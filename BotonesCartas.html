@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elige una Carta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            animation: float-up 8s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1.3em;
+            margin-bottom: 50px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .letters-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+        }
+
+        .letter {
+            position: relative;
+            width: 280px;
+            height: 350px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: slideUp 0.6s ease both;
+        }
+
+        .letter:nth-child(1) {
+            animation-delay: 0.5s;
+        }
+
+        .letter:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+
+        .letter:nth-child(3) {
+            animation-delay: 0.9s;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .letter:hover {
+            transform: translateY(-20px) scale(1.05);
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 60%);
+        }
+
+        .letter:nth-child(2) .envelope::before {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .letter:nth-child(3) .envelope::before {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(135deg, #fa8282 0%, #f57088 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top center;
+            transition: transform 0.4s ease;
+            z-index: 2;
+        }
+
+        .letter:nth-child(2) .envelope-flap {
+            background: linear-gradient(135deg, #f5a4ff 0%, #f76b8a 100%);
+        }
+
+        .letter:nth-child(3) .envelope-flap {
+            background: linear-gradient(135deg, #6bb5ff 0%, #1af5ff 100%);
+        }
+
+        .letter:hover .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .letter-content {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 80%;
+        }
+
+        .letter-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .letter-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .letter-description {
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        .letter-seal {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+            }
+            
+            .letters-container {
+                gap: 30px;
+            }
+            
+            .letter {
+                width: 250px;
+                height: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="hearts"></div>
+    
+    <div class="container">
+        <h1>💌 Elige una Carta 💌</h1>
+        <p class="subtitle">Cada una tiene algo especial para ti...</p>
+        
+        <div class="letters-container">
+            <div class="letter" onclick="openLetter(1)">
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="letter-seal">💖</div>
+                    <div class="letter-content">
+                        <div class="letter-icon">💝</div>
+                        <div class="letter-title">Agradecimiento</div>
+                        <div class="letter-description">Razones por las que te amo y te agradezco tanto</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="letter" onclick="openLetter(2)">
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="letter-seal">💕</div>
+                    <div class="letter-content">
+                        <div class="letter-icon">💗</div>
+                        <div class="letter-title">Video</div>
+                        <div class="letter-description">Momentos favoritos juntos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="letter" onclick="openLetter(3)">
+                <div class="envelope">
+                    <div class="envelope-flap"></div>
+                    <div class="letter-seal">💓</div>
+                    <div class="letter-content">
+                        <div class="letter-icon">💞</div>
+                        <div class="letter-title">Notitas Lindas</div>
+                        <div class="letter-description">Notas que me recuerdan a ti y lo especial e importante que eres para mí</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="Lord Huron - The Night We Met (Sub. Español  Lyrics).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const music = document.getElementById('backgroundMusic');
+
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    container.appendChild(heart);
+                }, i * 200);
+            }
+        }
+
+        function openLetter(letterNumber) {
+            // Guardar tiempo de música antes de cambiar de página
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+                sessionStorage.setItem('musicPlaying', 'true');
+            }
+
+            if (letterNumber === 1) {
+                window.location.href = 'carta1.html';
+            } else if (letterNumber === 2) {
+                window.location.href = 'carta2.html';
+            } else if (letterNumber === 3) {
+                window.location.href = 'carta3.html';
+            }
+        }
+
+        // Continuar reproduciendo música desde donde se quedó
+        window.addEventListener('load', function() {
+            const musicTime = sessionStorage.getItem('musicTime');
+            const musicPlaying = sessionStorage.getItem('musicPlaying');
+            
+            if (musicPlaying === 'true') {
+                music.volume = 1.0;
+                if (musicTime) {
+                    music.currentTime = parseFloat(musicTime);
+                }
+                
+                music.play().catch(error => {
+                    console.log('Error al reproducir música:', error);
+                    // Reproducir con primera interacción si hay error
+                    document.body.addEventListener('click', function playOnce() {
+                        music.play();
+                        document.body.removeEventListener('click', playOnce);
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Inicializar
+        createHearts();
+    </script>
+</body>
+</html>

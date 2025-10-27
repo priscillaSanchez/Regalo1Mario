@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros Momentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 20px;
+            animation: float-up 10s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .video-container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+            animation: slideIn 1s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .video-header {
+            text-align: center;
+            margin-bottom: 35px;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-header h1 {
+            color: #e74c3c;
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .video-header .subtitle {
+            color: #667eea;
+            font-size: 1.4em;
+            font-style: italic;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Ratio 16:9 */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 35px;
+            animation: scaleIn 1s ease 0.5s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-message {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            border-left: 5px solid #e74c3c;
+            animation: fadeInUp 1s ease 0.7s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-message p {
+            color: #333;
+            font-size: 1.4em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .video-message .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        .video-message .heart-emoji {
+            font-size: 1.5em;
+            animation: heartBeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.2);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        .decorative-line {
+            text-align: center;
+            font-size: 2em;
+            margin: 25px 0;
+            opacity: 0.7;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            color: white;
+            opacity: 0.9;
+            pointer-events: none;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: opacity 0.3s ease;
+        }
+
+        .video-wrapper:hover .play-icon {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .video-container {
+                padding: 35px 25px;
+            }
+
+            .video-header h1 {
+                font-size: 2.2em;
+            }
+
+            .video-header .subtitle {
+                font-size: 1.2em;
+            }
+
+            .video-message p {
+                font-size: 1.2em;
+            }
+
+            .back-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                font-size: 1em;
+            }
+
+            .play-icon {
+                font-size: 4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="hearts"></div>
+    
+    <div class="video-container">
+        <div class="video-header">
+            <h1>💕 Mario y Yo 💕</h1>
+            <p class="subtitle">Nuestros momentos especiales</p>
+        </div>
+
+        <div class="video-wrapper">
+            <video controls controlsList="nodownload" preload="metadata">
+                <source src="Mario y yo.mp4" type="video/mp4">
+                Tu navegador no soporta el elemento de video.
+            </video>
+            <div class="play-icon">▶️</div>
+        </div>
+
+        <div class="decorative-line">✨ 💖 ✨</div>
+
+        <div class="video-message">
+            <p>
+                Un poco de los <span class="highlight">momentos más felices</span> estando a tu lado
+            </p>
+            <p>
+                <span class="highlight">Gracias por tu amor</span> y por hacerme <span class="highlight">volver a creer</span>, 
+                en volverme ese <span class="highlight">brillo en mis ojos</span> <span class="heart-emoji">✨❤️</span>
+            </p>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="goBack()">
+        <span>←</span>
+        <span>Volver</span>
+    </button>
+
+    <audio id="backgroundMusic" loop>
+        <source src="Lord Huron - The Night We Met (Sub. Español  Lyrics).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const music = document.getElementById('backgroundMusic');
+        const video = document.querySelector('video');
+        const playIcon = document.querySelector('.play-icon');
+
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                    heart.style.animationDelay = Math.random() * 3 + 's';
+                    container.appendChild(heart);
+                }, i * 150);
+            }
+        }
+
+        function goBack() {
+            // Guardar el tiempo de la música antes de volver
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+                sessionStorage.setItem('musicPlaying', 'true');
+            }
+            window.location.href = 'BotonesCartas.html';
+        }
+
+        // Ocultar el ícono de play cuando el video se reproduce
+        video.addEventListener('play', function() {
+            playIcon.style.opacity = '0';
+            // Pausar la música de fondo cuando se reproduce el video
+            if (music && !music.paused) {
+                music.pause();
+                sessionStorage.setItem('musicPausedForVideo', 'true');
+            }
+        });
+
+        video.addEventListener('pause', function() {
+            playIcon.style.opacity = '0.9';
+            // Reanudar la música cuando se pausa el video
+            if (sessionStorage.getItem('musicPausedForVideo') === 'true') {
+                music.play();
+                sessionStorage.removeItem('musicPausedForVideo');
+            }
+        });
+
+        video.addEventListener('ended', function() {
+            playIcon.style.opacity = '0.9';
+            // Reanudar la música cuando termina el video
+            if (sessionStorage.getItem('musicPausedForVideo') === 'true') {
+                music.play();
+                sessionStorage.removeItem('musicPausedForVideo');
+            }
+        });
+
+        // Continuar reproduciendo la música desde donde se quedó
+        window.addEventListener('load', function() {
+            const musicTime = sessionStorage.getItem('musicTime');
+            const musicPlaying = sessionStorage.getItem('musicPlaying');
+            
+            if (musicPlaying === 'true') {
+                music.volume = 1.0;
+                
+                if (musicTime) {
+                    music.currentTime = parseFloat(musicTime);
+                }
+                
+                music.play().then(() => {
+                    console.log('✅ Música continuando en carta2');
+                }).catch(error => {
+                    console.log('⚠️ Error al reproducir música:', error);
+                    document.body.addEventListener('click', function playOnce() {
+                        music.play();
+                        document.body.removeEventListener('click', playOnce);
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Guardar tiempo periódicamente mientras se reproduce
+        setInterval(() => {
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+            }
+        }, 1000);
+
+        // Inicializar
+        createHearts();
+    </script>
+</body>
+</html>

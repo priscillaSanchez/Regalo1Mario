@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando Amor...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            animation: float-up 8s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .loading-container {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            background: white;
+            padding: 60px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+        }
+
+        .heart-icon {
+            font-size: 8em;
+            color: #e74c3c;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.3);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.1s linear;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .progress-percentage {
+            margin-top: 15px;
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .complete-message {
+            display: none;
+            font-size: 2em;
+            color: #e74c3c;
+            margin-top: 20px;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .continue-button {
+            display: none;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            animation: fadeInScale 0.5s ease 0.3s both;
+        }
+
+        .continue-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="hearts"></div>
+    
+    <div class="loading-container">
+        <div class="heart-icon">❤️</div>
+        <div class="loading-text">Preparando tu sorpresa...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-percentage" id="progressText">0%</div>
+        <div class="complete-message" id="completeMessage">¡Listo! 💕</div>
+        <button class="continue-button" id="continueButton" onclick="goToNextPage()">Continuar</button>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="Lord Huron - The Night We Met (Sub. Español  Lyrics).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const music = document.getElementById('backgroundMusic');
+        let musicStarted = false;
+
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    container.appendChild(heart);
+                }, i * 200);
+            }
+        }
+
+        function startLoading() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const completeMessage = document.getElementById('completeMessage');
+            const continueButton = document.getElementById('continueButton');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        completeMessage.style.display = 'block';
+                        continueButton.style.display = 'inline-block';
+                    }, 500);
+                }
+            }, 30);
+        }
+
+        function startMusic() {
+            if (!musicStarted) {
+                music.play().then(() => {
+                    musicStarted = true;
+                    sessionStorage.setItem('musicPlaying', 'true');
+                }).catch(error => {
+                    console.log('Autoplay bloqueado, intentando de nuevo...');
+                });
+            }
+        }
+
+        function goToNextPage() {
+            if (music && !music.paused) {
+                sessionStorage.setItem('musicTime', music.currentTime);
+                sessionStorage.setItem('musicPlaying', 'true');
+            }
+            window.location.href = 'BotonesCartas.html';
+        }
+
+        // Inicializar
+        createHearts();
+        startLoading();
+
+        // Intentar reproducir automáticamente
+        window.addEventListener('load', function() {
+            music.volume = 1.0;
+            music.muted = false;
+            
+            setTimeout(() => {
+                startMusic();
+            }, 100);
+        });
+
+        // Reproducir con la primera interacción si falla el autoplay
+        const forcePlay = () => {
+            if (!musicStarted) {
+                startMusic();
+            }
+        };
+
+        document.addEventListener('click', forcePlay, { once: true });
+        document.addEventListener('touchstart', forcePlay, { once: true });
+        document.addEventListener('keydown', forcePlay, { once: true });
+
+        music.addEventListener('error', function(e) {
+            console.error('Error al cargar el audio:', e);
+        });
+
+        music.addEventListener('canplay', function() {
+            console.log('Audio listo para reproducir');
+        });
+    </script>
+</body>
+</html>
